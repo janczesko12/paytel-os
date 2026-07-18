@@ -79,10 +79,11 @@ function onScan(decodedText) {
 const scanner = new Html5QrcodeScanner(
     "reader",
     {
+        fps: 10,
         qrbox: {
-            width: 320,
-            height: 220
-        },
+            width: 300,
+            height: 180
+        }
     }
 );
 
