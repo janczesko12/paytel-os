@@ -77,16 +77,17 @@ function onScanSuccess(decodedText){
 const scanner = new Html5QrcodeScanner(
     "reader",
     {
-        fps:10,
-        qrbox:{
-            width:300,
-            height:180
+        fps: 10,
+        qrbox: {
+            width: 300,
+            height: 180
         },
-        formatsToSupport:[
-            Html5QrcodeSupportedFormats.EAN_13
+        supportedScanTypes: [
+            Html5QrcodeScanType.SCAN_TYPE_CAMERA
         ]
     },
     false
 );
+
 
 scanner.render(onScanSuccess);
