@@ -1,24 +1,92 @@
-const video = document.getElementById("video");
 const status = document.getElementById("status");
+const nameBox = document.getElementById("name");
+const priceBox = document.getElementById("price");
 
-async function startCamera() {
-    try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-            video: {
-                facingMode: { ideal: "environment" }
+let lastCode = "";
+let lastScan = 0;
+
+async function sendBarcode(barcode){
+
+    try{
+
+        status.innerText="Wysyłanie...";
+
+        const response = await fetch("/scan",{
+
+            method:"POST",
+
+            headers:{
+                "Content-Type":"application/json"
             },
-            audio: false
+
+            body:JSON.stringify({
+                barcode:barcode
+            })
+
         });
 
-        video.srcObject = stream;
-        await video.play();
+        const data = await response.json();
 
-        status.innerText = "✅ Kamera działa";
+        if(data.success){
 
-    } catch (e) {
-        status.innerText = "❌ " + e.name;
-        console.error(e);
+            status.innerText="✅ Zeskanowano";
+
+            nameBox.innerText=data.name;
+            priceBox.innerText=data.price.toFixed(2)+" zł";
+
+            if(navigator.vibrate){
+                navigator.vibrate(100);
+            }
+
+        }else{
+
+            status.innerText="❌ Nie znaleziono";
+
+            nameBox.innerText="Brak produktu";
+            priceBox.innerText="";
+
+        }
+
+    }catch(e){
+
+        console.log(e);
+
+        status.innerText="Błąd połączenia";
+
     }
+
 }
 
-startCamera();
+function onScanSuccess(decodedText){
+
+    const now=Date.now();
+
+    if(decodedText===lastCode && now-lastScan<1000){
+        return;
+    }
+
+    lastCode=decodedText;
+    lastScan=now;
+
+    status.innerText=decodedText;
+
+    sendBarcode(decodedText);
+
+}
+
+const scanner = new Html5QrcodeScanner(
+    "reader",
+    {
+        fps:10,
+        qrbox:{
+            width:300,
+            height:180
+        },
+        formatsToSupport:[
+            Html5QrcodeSupportedFormats.EAN_13
+        ]
+    },
+    false
+);
+
+scanner.render(onScanSuccess);

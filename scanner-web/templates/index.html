@@ -6,8 +6,6 @@
     <title>Skaner</title>
 
     <link rel="stylesheet" href="/static/style.css">
-
-    <script src="https://unpkg.com/@zxing/library@0.21.3"></script>
 </head>
 <body>
 
@@ -15,20 +13,21 @@
 
     <h1>Skaner</h1>
 
-    <video id="video" autoplay playsinline></video>
+<div id="reader"></div>
 
-    <div id="status">
-        Oczekiwanie...
-    </div>
-
-    <div class="product">
-        <div id="name">---</div>
-        <div id="price"></div>
-    </div>
-
+<div id="status">
+    Oczekiwanie...
 </div>
 
-<script src="/static/app.js"></script>
+<div class="product">
+    <div id="name">---</div>
+    <div id="price"></div>
+</div>
+<link rel="stylesheet" href="https://unpkg.com/html5-qrcode/html5-qrcode.css">
+
+<script src="https://unpkg.com/html5-qrcode"></script>
+
+<script src="/static/app.js"></script><script src="/static/app.js"></script>
 
 </body>
 </html>
