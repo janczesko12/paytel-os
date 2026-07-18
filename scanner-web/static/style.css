@@ -6,3 +6,34 @@
 #reader video{
     border-radius:20px;
 }
+/* html5-qrcode */
+
+#reader {
+    width: 100%;
+    max-width: 420px;
+    margin: 20px auto;
+    border-radius: 20px;
+    overflow: hidden;
+    background: #222;
+}
+
+#reader video {
+    width: 100%;
+    border-radius: 20px;
+}
+
+#reader__dashboard_section_csr,
+#reader__scan_region img,
+#reader__dashboard_section_swaplink {
+    display: none !important;
+}
+
+#reader button {
+    background: #1976d2;
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+}
