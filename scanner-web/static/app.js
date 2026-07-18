@@ -59,7 +59,9 @@ async function sendBarcode(barcode){
 
 }
 
-function onScan(decodedText){
+function onScan(decodedText) {
+    alert(decodedText);
+    return;
 
     const now=Date.now();
 
