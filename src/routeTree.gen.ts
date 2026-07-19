@@ -9,19 +9,14 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as UstawieniaRouteImport } from './routes/ustawienia'
-import { Route as PlatnoscRouteImport } from './routes/platnosc'
-import { Route as HistoriaRouteImport } from './routes/historia'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as HistoriaRouteImport } from './routes/historia'
+import { Route as PlatnoscRouteImport } from './routes/platnosc'
+import { Route as UstawieniaRouteImport } from './routes/ustawienia'
 
-const UstawieniaRoute = UstawieniaRouteImport.update({
-  id: '/ustawienia',
-  path: '/ustawienia',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PlatnoscRoute = PlatnoscRouteImport.update({
-  id: '/platnosc',
-  path: '/platnosc',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HistoriaRoute = HistoriaRouteImport.update({
@@ -29,9 +24,14 @@ const HistoriaRoute = HistoriaRouteImport.update({
   path: '/historia',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const PlatnoscRoute = PlatnoscRouteImport.update({
+  id: '/platnosc',
+  path: '/platnosc',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UstawieniaRoute = UstawieniaRouteImport.update({
+  id: '/ustawienia',
+  path: '/ustawienia',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -71,18 +71,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/ustawienia': {
-      id: '/ustawienia'
-      path: '/ustawienia'
-      fullPath: '/ustawienia'
-      preLoaderRoute: typeof UstawieniaRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/platnosc': {
-      id: '/platnosc'
-      path: '/platnosc'
-      fullPath: '/platnosc'
-      preLoaderRoute: typeof PlatnoscRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/historia': {
@@ -92,11 +85,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HistoriaRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/platnosc': {
+      id: '/platnosc'
+      path: '/platnosc'
+      fullPath: '/platnosc'
+      preLoaderRoute: typeof PlatnoscRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ustawienia': {
+      id: '/ustawienia'
+      path: '/ustawienia'
+      fullPath: '/ustawienia'
+      preLoaderRoute: typeof UstawieniaRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -111,3 +111,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

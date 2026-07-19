@@ -7,7 +7,7 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -134,15 +134,37 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const [theme, setTheme] = useState<"light" | "dark">("light");
 
   useEffect(() => {
     registerPWA();
+
+    if (typeof window !== "undefined" && window.matchMedia) {
+      const media = window.matchMedia("(prefers-color-scheme: dark)");
+
+      setTheme(media.matches ? "dark" : "light");
+
+      const handleChange = (e: MediaQueryListEvent) => {
+        setTheme(e.matches ? "dark" : "light");
+      };
+
+      media.addEventListener("change", handleChange);
+
+      return () => {
+        media.removeEventListener("change", handleChange);
+      };
+    }
   }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
       <Outlet />
-      <Toaster position="top-center" richColors closeButton theme="system" />
+      <Toaster
+        position="top-center"
+        richColors
+        closeButton
+        theme={theme}
+      />
     </QueryClientProvider>
   );
 }

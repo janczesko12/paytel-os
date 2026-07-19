@@ -25,19 +25,25 @@ function Home() {
   const [busy, setBusy] = useState(false);
   const [last, setLast] = useState<{ name: string; price: number } | null>(null);
   const [error, setError] = useState<{ title: string; message: string } | null>(null);
-  const [online, setOnline] = useState(typeof navigator === "undefined" ? true : navigator.onLine);
+const [online, setOnline] = useState(true);
 
-  useEffect(() => {
-    const up = () => setOnline(true);
-    const down = () => setOnline(false);
-    window.addEventListener("online", up);
-    window.addEventListener("offline", down);
-    return () => {
-      window.removeEventListener("online", up);
-      window.removeEventListener("offline", down);
-    };
-  }, []);
+useEffect(() => {
+  // Odczytuj navigator tylko po hydracji
+  if (typeof navigator !== "undefined" && "onLine" in navigator) {
+    setOnline(navigator.onLine);
+  }
 
+  const handleOnline = () => setOnline(true);
+  const handleOffline = () => setOnline(false);
+
+  window.addEventListener("online", handleOnline);
+  window.addEventListener("offline", handleOffline);
+
+  return () => {
+    window.removeEventListener("online", handleOnline);
+    window.removeEventListener("offline", handleOffline);
+  };
+}, []);
   const handleDetected = async (barcode: string) => {
     if (busy) return;
     setBusy(true);
